@@ -12,7 +12,23 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "node_modules/**",
   ]),
+  // Custom stricter rules
+  {
+    rules: {
+      // TypeScript
+      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-explicit-any": "error",
+      // React
+      "react/self-closing-comp": "error",
+      "react/jsx-curly-brace-presence": ["error", { props: "never", children: "never" }],
+      // General
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "prefer-const": "error",
+      "no-var": "error",
+    },
+  },
 ]);
 
 export default eslintConfig;
