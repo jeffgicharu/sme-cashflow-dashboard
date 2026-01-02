@@ -7,7 +7,7 @@ import {
   categoryRules,
   recurringTransactions,
 } from '@/lib/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, or } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import {
   addTransactionSchema,
@@ -20,6 +20,89 @@ interface ActionResult {
   success: boolean;
   error?: string;
   data?: { id: string };
+}
+
+/**
+ * Find matching category rule for auto-categorization
+ * Checks sender phone or sender name against existing rules
+ */
+export async function findMatchingCategoryRule(
+  userId: string,
+  senderPhone?: string | null,
+  senderName?: string | null
+): Promise<string | null> {
+  if (!senderPhone && !senderName) return null;
+
+  try {
+    const conditions = [];
+    if (senderPhone) {
+      conditions.push(eq(categoryRules.senderIdentifier, senderPhone));
+    }
+    if (senderName) {
+      conditions.push(eq(categoryRules.senderIdentifier, senderName));
+    }
+
+    const rule = await db.query.categoryRules.findFirst({
+      where: and(eq(categoryRules.userId, userId), or(...conditions)),
+    });
+
+    return rule?.categoryId || null;
+  } catch (error) {
+    console.error('Failed to find matching category rule:', error);
+    return null;
+  }
+}
+
+/**
+ * Add a transaction from M-Pesa with auto-categorization
+ * This is used by the M-Pesa webhook
+ */
+export async function addMpesaTransaction(input: {
+  userId: string;
+  amount: number;
+  type: 'income' | 'expense';
+  senderName?: string;
+  senderPhone?: string;
+  reference?: string;
+  date: Date;
+}): Promise<ActionResult> {
+  try {
+    // Find matching category rule for auto-categorization
+    const categoryId = await findMatchingCategoryRule(
+      input.userId,
+      input.senderPhone,
+      input.senderName
+    );
+
+    const [newTransaction] = await db
+      .insert(transactions)
+      .values({
+        userId: input.userId,
+        amount: input.amount,
+        type: input.type,
+        source: 'mpesa',
+        categoryId,
+        senderName: input.senderName || null,
+        senderPhone: input.senderPhone || null,
+        reference: input.reference || null,
+        date: input.date,
+        isRecurring: false,
+        isPersonal: false,
+      })
+      .returning({ id: transactions.id });
+
+    revalidatePath('/');
+    revalidatePath('/transactions');
+
+    return { success: true, data: { id: newTransaction.id } };
+  } catch (error) {
+    console.error('Failed to add M-Pesa transaction:', error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : 'Failed to add transaction',
+    };
+  }
 }
 
 export async function addTransaction(
