@@ -10,6 +10,7 @@ import {
   categoryRules,
 } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import { seedMockTransactions } from '@/lib/mpesa/mock-data';
 
 interface ActionResult {
   success: boolean;
@@ -206,5 +207,59 @@ export async function exportAllData(): Promise<{
     return { success: true, data: exportData };
   } catch {
     return { success: false, error: 'Failed to export data' };
+  }
+}
+
+export async function loadDemoData(): Promise<{
+  success: boolean;
+  count?: number;
+  error?: string;
+}> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return { success: false, error: 'Unauthorized' };
+  }
+
+  try {
+    const result = await seedMockTransactions(userId, 30);
+
+    if (result.success) {
+      revalidatePath('/');
+      revalidatePath('/transactions');
+      revalidatePath('/insights');
+      return { success: true, count: result.count };
+    }
+
+    return { success: false, error: result.error };
+  } catch {
+    return { success: false, error: 'Failed to load demo data' };
+  }
+}
+
+export async function updateTillNumber(
+  tillNumber: string
+): Promise<ActionResult> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return { success: false, error: 'Unauthorized' };
+  }
+
+  // Validate Till number format (6-digit number)
+  if (tillNumber && !/^\d{6}$/.test(tillNumber)) {
+    return { success: false, error: 'Till number must be 6 digits' };
+  }
+
+  try {
+    await db
+      .update(userSettings)
+      .set({ tillNumber: tillNumber || null, updatedAt: new Date() })
+      .where(eq(userSettings.userId, userId));
+
+    revalidatePath('/settings');
+    return { success: true };
+  } catch {
+    return { success: false, error: 'Failed to update Till number' };
   }
 }

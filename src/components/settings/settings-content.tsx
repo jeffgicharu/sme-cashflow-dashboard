@@ -8,6 +8,7 @@ import {
   Tag,
   HelpCircle,
   LogOut,
+  Smartphone,
 } from 'lucide-react';
 import { SignOutButton } from '@clerk/nextjs';
 
@@ -15,10 +16,12 @@ import { Button } from '@/components/ui/button';
 import { EditableField } from './editable-field';
 import { NotificationToggle } from './notification-toggle';
 import { ExportDataButton } from './export-data-button';
+import { DemoDataButton } from './demo-data-button';
 import {
   updateBusinessName,
   updateThreshold,
   updateNotificationSettings,
+  updateTillNumber,
 } from '@/lib/actions/settings';
 
 interface SettingsContentProps {
@@ -54,6 +57,10 @@ export function SettingsContent({ settings, userEmail }: SettingsContentProps) {
       settings.pushNotificationsEnabled,
       enabled
     );
+  };
+
+  const handleTillNumberSave = async (value: string) => {
+    return updateTillNumber(value);
   };
 
   return (
@@ -148,18 +155,34 @@ export function SettingsContent({ settings, userEmail }: SettingsContentProps) {
         </div>
       </div>
 
+      {/* M-Pesa Integration Section */}
+      <div>
+        <h2 className="mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase">
+          M-PESA INTEGRATION
+        </h2>
+        <div className="divide-y divide-slate-100 rounded-lg border border-slate-200 bg-white">
+          <EditableField
+            label="Till Number"
+            value={settings.tillNumber || ''}
+            onSave={handleTillNumberSave}
+            placeholder="Enter 6-digit Till number"
+            icon={<Smartphone className="h-4 w-4 text-slate-400" />}
+          />
+          <div className="px-4 py-3">
+            <DemoDataButton />
+            <p className="mt-2 text-xs text-slate-500">
+              Load 30 days of sample transactions to explore the dashboard
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Account Section */}
       <div>
         <h2 className="mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase">
           ACCOUNT
         </h2>
         <div className="divide-y divide-slate-100 rounded-lg border border-slate-200 bg-white">
-          <div className="flex items-center justify-between px-4 py-3">
-            <span className="text-sm text-slate-500">Connected Till</span>
-            <span className="text-sm font-medium text-slate-900">
-              {settings.tillNumber || 'Not connected'}
-            </span>
-          </div>
           <div className="flex items-center justify-between px-4 py-3">
             <span className="text-sm text-slate-500">Email</span>
             <span className="text-sm font-medium text-slate-900">

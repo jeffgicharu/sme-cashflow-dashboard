@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Check, ChevronLeft, TrendingUp } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Check, ChevronLeft, TrendingUp, Smartphone } from 'lucide-react';
 import { completeOnboarding } from '@/lib/actions/onboarding';
 
 type Step = 'welcome' | 'connect' | 'preferences' | 'done';
@@ -18,6 +19,7 @@ export default function OnboardingPage() {
     businessName: '',
     tillNumber: '',
     lowBalanceThreshold: '5000',
+    seedDemoData: true,
   });
 
   const handleNext = () => {
@@ -43,6 +45,7 @@ export default function OnboardingPage() {
         businessName: formData.businessName,
         tillNumber: formData.tillNumber || undefined,
         lowBalanceThreshold: parseInt(formData.lowBalanceThreshold) || 5000,
+        seedDemoData: formData.seedDemoData && !formData.tillNumber,
       });
 
       if (result.success) {
@@ -122,12 +125,17 @@ export default function OnboardingPage() {
 
         {step === 'connect' && (
           <div className="w-full max-w-sm">
-            <h2 className="mb-2 text-xl font-semibold text-slate-900">
+            {/* M-Pesa icon */}
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+              <Smartphone className="h-8 w-8 text-emerald-600" />
+            </div>
+
+            <h2 className="mb-2 text-center text-xl font-semibold text-slate-900">
               Connect your M-Pesa Till
             </h2>
-            <p className="mb-6 text-sm text-slate-600">
-              This lets us show your business transactions automatically. We
-              never access your PIN or make any transactions.
+            <p className="mb-6 text-center text-sm text-slate-600">
+              We&apos;ll receive your business transactions automatically. We
+              never access your PIN or make transactions.
             </p>
 
             <div className="mb-6 space-y-4">
@@ -143,15 +151,49 @@ export default function OnboardingPage() {
                   }
                   className="mt-1"
                 />
+                <p className="mt-1 text-xs text-slate-500">
+                  Your 6-digit Lipa na M-Pesa business number
+                </p>
               </div>
             </div>
 
-            <div className="mb-6 rounded-lg bg-blue-50 p-4">
-              <p className="text-sm text-blue-800">
-                <strong>Demo mode:</strong> In this version, we&apos;ll show
-                sample data for testing. M-Pesa integration coming soon!
-              </p>
-            </div>
+            {!formData.tillNumber && (
+              <div className="mb-6 rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div className="flex items-start gap-3">
+                  <Checkbox
+                    id="seedDemoData"
+                    checked={formData.seedDemoData}
+                    onCheckedChange={(checked) =>
+                      setFormData({
+                        ...formData,
+                        seedDemoData: checked === true,
+                      })
+                    }
+                  />
+                  <div>
+                    <Label
+                      htmlFor="seedDemoData"
+                      className="text-sm font-medium text-slate-900"
+                    >
+                      Load sample transactions
+                    </Label>
+                    <p className="mt-0.5 text-xs text-slate-500">
+                      Get 30 days of realistic demo data to explore the
+                      dashboard
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {formData.tillNumber && (
+              <div className="mb-6 rounded-lg bg-emerald-50 p-4">
+                <p className="text-sm text-emerald-800">
+                  <strong>Ready to connect!</strong> After setup, register your
+                  Till in the Settings page to start receiving transactions.
+                </p>
+              </div>
+            )}
 
             <Button
               onClick={handleNext}
@@ -161,12 +203,17 @@ export default function OnboardingPage() {
               {formData.tillNumber ? 'Connect Till' : 'Continue'}
             </Button>
 
-            <button
-              onClick={handleNext}
-              className="mt-3 w-full text-center text-sm text-slate-500"
-            >
-              Skip for now (Use demo data)
-            </button>
+            {formData.tillNumber && (
+              <button
+                onClick={() => {
+                  setFormData({ ...formData, tillNumber: '' });
+                  handleNext();
+                }}
+                className="mt-3 w-full text-center text-sm text-slate-500"
+              >
+                Skip for now
+              </button>
+            )}
           </div>
         )}
 

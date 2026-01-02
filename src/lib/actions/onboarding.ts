@@ -4,11 +4,13 @@ import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { users, userSettings } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import { seedMockTransactions } from '@/lib/mpesa/mock-data';
 
 interface CompleteOnboardingInput {
   businessName: string;
   tillNumber?: string;
   lowBalanceThreshold?: number;
+  seedDemoData?: boolean;
 }
 
 interface OnboardingResult {
@@ -65,6 +67,11 @@ export async function completeOnboarding(
         lowBalanceThreshold: input.lowBalanceThreshold || 5000,
         onboardingCompleted: true,
       });
+    }
+
+    // Seed demo data if requested
+    if (input.seedDemoData) {
+      await seedMockTransactions(userId, 30);
     }
 
     return { success: true };

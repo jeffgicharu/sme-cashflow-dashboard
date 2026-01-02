@@ -13,6 +13,7 @@ interface EditableFieldProps {
   type?: 'text' | 'number';
   prefix?: string;
   placeholder?: string;
+  icon?: React.ReactNode;
 }
 
 export function EditableField({
@@ -22,6 +23,7 @@ export function EditableField({
   type = 'text',
   prefix,
   placeholder,
+  icon,
 }: EditableFieldProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
@@ -116,7 +118,10 @@ export function EditableField({
       onClick={handleEdit}
       className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-slate-50"
     >
-      <span className="text-sm text-slate-500">{label}</span>
+      <div className="flex items-center gap-3">
+        {icon}
+        <span className="text-sm text-slate-500">{label}</span>
+      </div>
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium text-slate-900">
           {prefix}
