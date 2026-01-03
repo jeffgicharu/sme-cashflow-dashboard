@@ -61,8 +61,8 @@ export function ProjectionChart({
         : '#EF4444';
 
   return (
-    <div className="h-64">
-      <ResponsiveContainer width="100%" height="100%">
+    <div style={{ width: '100%', minHeight: 256 }}>
+      <ResponsiveContainer width="100%" height={256}>
         <AreaChart
           data={formattedData}
           margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
