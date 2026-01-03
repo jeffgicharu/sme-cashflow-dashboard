@@ -31,7 +31,7 @@ Push the database schema with `npm run db:push`, then seed demo data with `npm r
 
 ## Stack
 
-Next.js 15 (App Router), TypeScript, Neon/Drizzle, Clerk auth, Tailwind/shadcn, Recharts for charts.
+Next.js 16 (App Router), TypeScript, Neon/Drizzle, Clerk auth, Tailwind/shadcn, Recharts for charts.
 
 ## Testing
 
