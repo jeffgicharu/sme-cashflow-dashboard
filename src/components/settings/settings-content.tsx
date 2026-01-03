@@ -17,6 +17,7 @@ import { EditableField } from './editable-field';
 import { NotificationToggle } from './notification-toggle';
 import { ExportDataButton } from './export-data-button';
 import { DemoDataButton } from './demo-data-button';
+import { MpesaTestButton } from './mpesa-test-button';
 import {
   updateBusinessName,
   updateThreshold,
@@ -172,6 +173,12 @@ export function SettingsContent({ settings, userEmail }: SettingsContentProps) {
             <DemoDataButton />
             <p className="mt-2 text-xs text-slate-500">
               Load 30 days of sample transactions to explore the dashboard
+            </p>
+          </div>
+          <div className="px-4 py-3">
+            <MpesaTestButton />
+            <p className="mt-2 text-xs text-slate-500">
+              Simulate a C2B payment to test webhook integration (sandbox only)
             </p>
           </div>
         </div>
