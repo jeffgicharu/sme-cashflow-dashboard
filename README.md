@@ -1,6 +1,10 @@
 # SME Cash Flow Dashboard
 
+[![CI](https://github.com/jeffgicharu/sme-cashflow-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/jeffgicharu/sme-cashflow-dashboard/actions/workflows/ci.yml)
+
 A cash flow analytics dashboard for Kenyan online sellers using M-Pesa. Track income and expenses, categorize transactions, visualize spending patterns, and predict cash flow gaps.
+
+**Live Demo:** [sme-cashflow-dashboard.vercel.app](https://sme-cashflow-dashboard.vercel.app)
 
 ## Features
 
@@ -62,15 +66,19 @@ A cash flow analytics dashboard for Kenyan online sellers using M-Pesa. Track in
 
 ## Scripts
 
-| Command              | Description               |
-| -------------------- | ------------------------- |
-| `npm run dev`        | Start development server  |
-| `npm run build`      | Build for production      |
-| `npm run start`      | Run production build      |
-| `npm run lint`       | Run ESLint                |
-| `npm run lint:fix`   | Fix ESLint issues         |
-| `npm run type-check` | Run TypeScript compiler   |
-| `npm run format`     | Format code with Prettier |
+| Command              | Description                 |
+| -------------------- | --------------------------- |
+| `npm run dev`        | Start development server    |
+| `npm run build`      | Build for production        |
+| `npm run start`      | Run production build        |
+| `npm run lint`       | Run ESLint                  |
+| `npm run type-check` | Run TypeScript compiler     |
+| `npm run test`       | Run unit tests (watch mode) |
+| `npm run test:run`   | Run unit tests (single run) |
+| `npm run test:e2e`   | Run Playwright E2E tests    |
+| `npm run db:push`    | Push schema to database     |
+| `npm run db:studio`  | Open Drizzle Studio         |
+| `npm run db:seed`    | Seed demo data              |
 
 ## Project Structure
 
@@ -100,6 +108,42 @@ src/
 ## Environment Variables
 
 See `.env.example` for required environment variables.
+
+### Required Variables
+
+| Variable                            | Description                    |
+| ----------------------------------- | ------------------------------ |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk public key               |
+| `CLERK_SECRET_KEY`                  | Clerk secret key               |
+| `DATABASE_URL`                      | Neon PostgreSQL connection URL |
+| `MPESA_CONSUMER_KEY`                | Safaricom Daraja consumer key  |
+| `MPESA_CONSUMER_SECRET`             | Safaricom Daraja secret        |
+| `MPESA_PASSKEY`                     | M-Pesa API passkey             |
+| `MPESA_SHORTCODE`                   | M-Pesa Till number             |
+
+## Deployment
+
+The app is deployed on [Vercel](https://vercel.com). Push to `main` triggers automatic deployment.
+
+### Manual Deployment
+
+```bash
+npm run build
+npm run start
+```
+
+## Testing
+
+```bash
+# Run all unit tests
+npm run test:run
+
+# Run tests in watch mode
+npm run test
+
+# Run E2E tests (requires build first)
+npm run build && npm run test:e2e
+```
 
 ## License
 
