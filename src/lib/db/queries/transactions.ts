@@ -1,9 +1,10 @@
 import { db } from '@/lib/db';
 import { transactions, categories } from '@/lib/db/schema';
 import { eq, and, gte, lte, isNull, desc, or, ilike, sql } from 'drizzle-orm';
+import type { TransactionFilter, DateRange } from '@/lib/utils/transactions';
 
-export type TransactionFilter = 'all' | 'income' | 'expense' | 'uncategorized';
-export type DateRange = 'today' | 'week' | 'month' | 'all';
+// Re-export types for backwards compatibility
+export type { TransactionFilter, DateRange } from '@/lib/utils/transactions';
 
 interface GetTransactionsOptions {
   userId: string;
@@ -165,37 +166,8 @@ export async function getCategories(userId: string) {
   }));
 }
 
-// Group transactions by date for display
-export function groupTransactionsByDate<T extends { date: Date }>(
-  transactions: T[]
-): Map<string, T[]> {
-  const groups = new Map<string, T[]>();
-
-  for (const transaction of transactions) {
-    const dateKey = transaction.date.toISOString().split('T')[0];
-    const existing = groups.get(dateKey) || [];
-    existing.push(transaction);
-    groups.set(dateKey, existing);
-  }
-
-  return groups;
-}
-
-export function formatDateHeader(dateStr: string): string {
-  const date = new Date(dateStr);
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  if (dateStr === today.toISOString().split('T')[0]) {
-    return `Today, ${date.toLocaleDateString('en-KE', { month: 'short', day: 'numeric' })}`;
-  }
-  if (dateStr === yesterday.toISOString().split('T')[0]) {
-    return `Yesterday, ${date.toLocaleDateString('en-KE', { month: 'short', day: 'numeric' })}`;
-  }
-  return date.toLocaleDateString('en-KE', {
-    weekday: 'long',
-    month: 'short',
-    day: 'numeric',
-  });
-}
+// Re-export client-safe utilities for backwards compatibility
+export {
+  groupTransactionsByDate,
+  formatDateHeader,
+} from '@/lib/utils/transactions';

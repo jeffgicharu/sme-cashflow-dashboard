@@ -12,11 +12,9 @@ import { EmptyState } from '@/components/shared/empty-state';
 import {
   formatDateHeader,
   groupTransactionsByDate,
-} from '@/lib/db/queries/transactions';
-import type {
-  TransactionFilter,
-  DateRange,
-} from '@/lib/db/queries/transactions';
+  type TransactionFilter,
+  type DateRange,
+} from '@/lib/utils/transactions';
 
 interface Transaction {
   id: string;
