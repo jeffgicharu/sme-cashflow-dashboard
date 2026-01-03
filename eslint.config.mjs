@@ -13,6 +13,8 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "node_modules/**",
+    // Utility scripts
+    "scripts/**",
   ]),
   // Custom stricter rules
   {

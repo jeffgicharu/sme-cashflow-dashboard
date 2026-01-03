@@ -303,6 +303,73 @@ export async function deleteTransaction(
   }
 }
 
+interface SyncResult {
+  success: boolean;
+  error?: string;
+  syncedIds?: string[];
+}
+
+interface OfflineTransactionInput {
+  id: string;
+  type: 'income' | 'expense';
+  amount: number;
+  description: string;
+  categoryId: string | null;
+  date: string;
+}
+
+export async function syncOfflineTransactions(
+  offlineTransactions: OfflineTransactionInput[]
+): Promise<SyncResult> {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    const syncedIds: string[] = [];
+
+    for (const offlineTx of offlineTransactions) {
+      try {
+        await db.insert(transactions).values({
+          userId,
+          amount: offlineTx.amount,
+          type: offlineTx.type,
+          source: 'manual',
+          categoryId: offlineTx.categoryId,
+          description: offlineTx.description || null,
+          date: new Date(offlineTx.date),
+          isRecurring: false,
+        });
+
+        syncedIds.push(offlineTx.id);
+      } catch (txError) {
+        console.error(
+          `Failed to sync offline transaction ${offlineTx.id}:`,
+          txError
+        );
+        // Continue with other transactions
+      }
+    }
+
+    if (syncedIds.length > 0) {
+      revalidatePath('/');
+      revalidatePath('/transactions');
+    }
+
+    return { success: true, syncedIds };
+  } catch (error) {
+    console.error('Failed to sync offline transactions:', error);
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to sync offline transactions',
+    };
+  }
+}
+
 export async function createCategoryRule(
   senderIdentifier: string,
   categoryId: string

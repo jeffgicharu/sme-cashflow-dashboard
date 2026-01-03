@@ -1,4 +1,5 @@
 import { BottomNav } from '@/components/navigation/bottom-nav';
+import { OfflineIndicator } from '@/components/shared/offline-indicator';
 
 export default function DashboardLayout({
   children,
@@ -9,6 +10,7 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-slate-50 pb-20">
       <main className="mx-auto max-w-lg">{children}</main>
       <BottomNav />
+      <OfflineIndicator />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { getDashboardData } from '@/lib/db/queries/dashboard';
 import { DashboardSkeleton } from '@/components/shared/skeleton';
 import { EmptyState } from '@/components/shared/empty-state';
+import { PendingSyncBanner } from '@/components/shared/pending-sync-banner';
 import {
   BalanceCard,
   TodaySummary,
@@ -48,6 +49,9 @@ async function DashboardContent() {
         </div>
         <p className="text-sm text-slate-500">{formatDate(new Date())}</p>
       </header>
+
+      {/* Pending Sync Banner */}
+      <PendingSyncBanner />
 
       {/* Balance Card */}
       <div className="mb-4">
