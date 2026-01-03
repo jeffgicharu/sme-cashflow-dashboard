@@ -2,42 +2,46 @@
 
 [![CI](https://github.com/jeffgicharu/sme-cashflow-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/jeffgicharu/sme-cashflow-dashboard/actions/workflows/ci.yml)
 
-Cash flow tracking for Kenyan online sellers using M-Pesa. Connect your Till, see where your money goes, and get alerts before you run low.
+A lot of small online sellers in Kenya run their business through M-Pesa but have no visibility into their cash flow. They know money comes in and goes out, but can't tell you their margins, their biggest expenses, or whether they'll be able to pay rent next month.
 
-**Demo:** [sme-cashflow-dashboard.vercel.app](https://sme-cashflow-dashboard.vercel.app)
+This dashboard connects to your M-Pesa Till via the Daraja API and gives you that visibility. You get transaction syncing, auto-categorization, 30-day projections, and PDF reports you can show a bank when applying for a loan.
 
-## What it does
+**Try it:** [sme-cashflow-dashboard.vercel.app](https://sme-cashflow-dashboard.vercel.app)
 
-- Syncs transactions from M-Pesa via Daraja API
-- Auto-categorizes spending based on rules you set
-- Shows a 30-day cash flow projection
-- Generates PDF reports (useful for loan applications)
-- Works offline as a PWA
+![Dashboard Screenshot](docs/screenshot.png)
 
-## Setup
+## Running locally
 
-You'll need accounts on [Clerk](https://clerk.com), [Neon](https://neon.tech), and [Safaricom Developer Portal](https://developer.safaricom.co.ke).
+You'll need Node 20+, plus accounts on [Clerk](https://clerk.com), [Neon](https://neon.tech), and the [Safaricom Developer Portal](https://developer.safaricom.co.ke).
 
 ```bash
 git clone git@github.com:jeffgicharu/sme-cashflow-dashboard.git
 cd sme-cashflow-dashboard
 npm install
 cp .env.example .env.local
-# Fill in your credentials
-npm run dev
 ```
 
-Push the database schema with `npm run db:push`, then seed demo data with `npm run db:seed`.
-
-## Stack
-
-Next.js 16 (App Router), TypeScript, Neon/Drizzle, Clerk auth, Tailwind/shadcn, Recharts for charts.
-
-## Testing
+Fill in your credentials in `.env.local`, then:
 
 ```bash
-npm run test:run      # unit tests
-npm run test:e2e      # playwright (build first)
+npm run db:push    # create tables
+npm run db:seed    # add demo data
+npm run dev        # start the app
+```
+
+Open [localhost:3000](http://localhost:3000). You'll go through a short onboarding flow, then land on a dashboard showing your balance, recent transactions, and cash flow projection.
+
+## Built with
+
+Next.js 16 with the App Router, TypeScript in strict mode, Postgres on Neon with Drizzle ORM. Auth is handled by Clerk. UI is Tailwind + shadcn components. Charts are Recharts.
+
+The app works offline as a PWA - transactions you add while offline sync when you're back online.
+
+## Tests
+
+```bash
+npm run test:run    # vitest
+npm run test:e2e    # playwright (run npm run build first)
 ```
 
 ## License
