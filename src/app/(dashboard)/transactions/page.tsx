@@ -76,7 +76,7 @@ function TransactionsLoading() {
 
 export default async function TransactionsPage(props: PageProps) {
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-0">
       <PageHeader title="Transactions" />
       <Suspense fallback={<TransactionsLoading />}>
         <TransactionsContent searchParams={props.searchParams} />

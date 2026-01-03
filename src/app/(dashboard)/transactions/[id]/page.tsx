@@ -29,12 +29,14 @@ export default async function TransactionDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-0">
       <PageHeader title="Transaction Details" showBack />
-      <TransactionDetailForm
-        transaction={transaction}
-        categories={categories}
-      />
+      <div className="md:max-w-xl">
+        <TransactionDetailForm
+          transaction={transaction}
+          categories={categories}
+        />
+      </div>
     </div>
   );
 }

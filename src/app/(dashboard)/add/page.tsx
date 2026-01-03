@@ -14,9 +14,11 @@ export default async function AddTransactionPage() {
   const categories = await getCategories(userId);
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-0">
       <PageHeader title="Add Transaction" showBack />
-      <AddTransactionForm categories={categories} />
+      <div className="md:max-w-xl">
+        <AddTransactionForm categories={categories} />
+      </div>
     </div>
   );
 }

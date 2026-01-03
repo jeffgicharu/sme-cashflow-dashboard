@@ -58,7 +58,7 @@ export default async function InsightsPage(props: PageProps) {
   ) as InsightPeriod;
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-0">
       <PageHeader title="Insights" />
       <Suspense fallback={<InsightsLoading />}>
         <InsightsData period={period} />

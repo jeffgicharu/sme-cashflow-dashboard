@@ -14,9 +14,11 @@ export default async function RulesPage() {
   const rules = await getCategoryRules();
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-0">
       <PageHeader title="Category Rules" backHref="/settings" />
-      <RulesList rules={rules} />
+      <div className="md:max-w-2xl">
+        <RulesList rules={rules} />
+      </div>
     </div>
   );
 }

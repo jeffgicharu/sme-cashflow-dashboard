@@ -57,7 +57,7 @@ export function InsightsContent({
 
       {/* Summary Cards */}
       {isPending ? (
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-2 md:gap-4">
           {[1, 2, 3].map((i) => (
             <div
               key={i}
@@ -69,42 +69,45 @@ export function InsightsContent({
         <SummaryCards {...initialData.summary} />
       )}
 
-      {/* Income vs Expenses Chart */}
-      <section>
-        <h2 className="mb-3 text-sm font-medium tracking-wide text-slate-500 uppercase">
-          Income vs Expenses
-        </h2>
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          {isPending ? (
-            <div className="h-64 animate-pulse rounded bg-slate-100" />
-          ) : (
-            <IncomeExpenseChart data={initialData.dailyData} />
-          )}
-        </div>
-      </section>
+      {/* Charts Grid - 2 columns on large screens */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Income vs Expenses Chart */}
+        <section>
+          <h2 className="mb-3 text-sm font-medium tracking-wide text-slate-500 uppercase">
+            Income vs Expenses
+          </h2>
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
+            {isPending ? (
+              <div className="h-64 animate-pulse rounded bg-slate-100" />
+            ) : (
+              <IncomeExpenseChart data={initialData.dailyData} />
+            )}
+          </div>
+        </section>
 
-      {/* Category Breakdown */}
-      <section>
-        <h2 className="mb-3 text-sm font-medium tracking-wide text-slate-500 uppercase">
-          Expenses by Category
-        </h2>
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          {isPending ? (
-            <div className="space-y-3">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div
-                  key={i}
-                  className="h-8 animate-pulse rounded bg-slate-100"
-                />
-              ))}
-            </div>
-          ) : (
-            <CategoryBreakdown data={initialData.categoryBreakdown} />
-          )}
-        </div>
-      </section>
+        {/* Category Breakdown */}
+        <section>
+          <h2 className="mb-3 text-sm font-medium tracking-wide text-slate-500 uppercase">
+            Expenses by Category
+          </h2>
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
+            {isPending ? (
+              <div className="space-y-3">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    className="h-8 animate-pulse rounded bg-slate-100"
+                  />
+                ))}
+              </div>
+            ) : (
+              <CategoryBreakdown data={initialData.categoryBreakdown} />
+            )}
+          </div>
+        </section>
+      </div>
 
-      {/* 30-Day Projection */}
+      {/* 30-Day Projection - full width */}
       <section>
         <h2 className="mb-3 text-sm font-medium tracking-wide text-slate-500 uppercase">
           30-Day Cash Flow Projection
@@ -122,33 +125,38 @@ export function InsightsContent({
         </div>
       </section>
 
-      {/* Upcoming Known Expenses */}
-      <section>
-        <h2 className="mb-3 text-sm font-medium tracking-wide text-slate-500 uppercase">
-          Upcoming Known Expenses
-        </h2>
-        {isPending ? (
-          <div className="h-32 animate-pulse rounded-lg border border-slate-200 bg-slate-100" />
-        ) : (
-          <UpcomingExpenses expenses={initialData.upcomingExpenses} />
-        )}
-      </section>
+      {/* Bottom section - 2 columns on large screens */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Upcoming Known Expenses */}
+        <section>
+          <h2 className="mb-3 text-sm font-medium tracking-wide text-slate-500 uppercase">
+            Upcoming Known Expenses
+          </h2>
+          {isPending ? (
+            <div className="h-32 animate-pulse rounded-lg border border-slate-200 bg-slate-100" />
+          ) : (
+            <UpcomingExpenses expenses={initialData.upcomingExpenses} />
+          )}
+        </section>
 
-      {/* Average Daily Spend */}
-      <div className="rounded-lg border border-slate-200 bg-white p-4 text-center">
-        <p className="text-sm text-slate-500">Average daily spend</p>
-        <p className="mt-1 text-xl font-bold text-slate-900">
-          {formatCurrency(initialData.avgDailySpend)}
-        </p>
+        {/* Average Daily Spend + Report Button */}
+        <div className="space-y-4">
+          <div className="rounded-lg border border-slate-200 bg-white p-4 text-center">
+            <p className="text-sm text-slate-500">Average daily spend</p>
+            <p className="mt-1 text-xl font-bold text-slate-900">
+              {formatCurrency(initialData.avgDailySpend)}
+            </p>
+          </div>
+
+          {/* Generate Report Button */}
+          <Link href="/reports">
+            <Button variant="outline" className="w-full">
+              <FileText className="mr-2 h-4 w-4" />
+              Generate Monthly Report
+            </Button>
+          </Link>
+        </div>
       </div>
-
-      {/* Generate Report Button */}
-      <Link href="/reports">
-        <Button variant="outline" className="w-full">
-          <FileText className="mr-2 h-4 w-4" />
-          Generate Monthly Report
-        </Button>
-      </Link>
     </div>
   );
 }

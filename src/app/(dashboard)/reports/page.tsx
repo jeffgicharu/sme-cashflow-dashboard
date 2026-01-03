@@ -61,11 +61,13 @@ function ReportsLoading() {
 
 export default function ReportsPage() {
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-0">
       <PageHeader title="Monthly Report" showBack />
-      <Suspense fallback={<ReportsLoading />}>
-        <ReportsData />
-      </Suspense>
+      <div className="md:max-w-3xl">
+        <Suspense fallback={<ReportsLoading />}>
+          <ReportsData />
+        </Suspense>
+      </div>
     </div>
   );
 }

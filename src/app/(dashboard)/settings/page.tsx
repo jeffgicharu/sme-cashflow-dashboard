@@ -32,9 +32,11 @@ export default async function SettingsPage() {
   const userEmail = user?.emailAddresses[0]?.emailAddress || 'N/A';
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-0">
       <PageHeader title="Settings" />
-      <SettingsContent settings={settingsData} userEmail={userEmail} />
+      <div className="md:max-w-2xl">
+        <SettingsContent settings={settingsData} userEmail={userEmail} />
+      </div>
     </div>
   );
 }

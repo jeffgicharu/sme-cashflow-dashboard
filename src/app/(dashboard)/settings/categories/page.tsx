@@ -14,12 +14,14 @@ export default async function CategoriesPage() {
   const { defaultCategories, customCategories } = await getAllCategories();
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-0">
       <PageHeader title="Categories" backHref="/settings" />
-      <CategoriesList
-        defaultCategories={defaultCategories}
-        customCategories={customCategories}
-      />
+      <div className="md:max-w-2xl">
+        <CategoriesList
+          defaultCategories={defaultCategories}
+          customCategories={customCategories}
+        />
+      </div>
     </div>
   );
 }

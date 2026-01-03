@@ -14,9 +14,11 @@ export default async function RecurringPage() {
   const { income, expenses } = await getRecurringTransactions();
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-0">
       <PageHeader title="Recurring Transactions" backHref="/settings" />
-      <RecurringList income={income} expenses={expenses} />
+      <div className="md:max-w-2xl">
+        <RecurringList income={income} expenses={expenses} />
+      </div>
     </div>
   );
 }
