@@ -11,7 +11,7 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
-    "prepare": "husky",
+    "prepare": "node -e \"try { require('child_process').execSync('husky', {stdio: 'inherit'}) } catch (e) {}\"",
     "db:generate": "dotenv -e .env.local -- drizzle-kit generate",
     "db:push": "dotenv -e .env.local -- drizzle-kit push --force",
     "db:studio": "dotenv -e .env.local -- drizzle-kit studio",
